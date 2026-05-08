@@ -2,7 +2,7 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v34. It is based on the working AOSP/Android TV image chain from the handoff notes, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
+The current public test build is v34. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
 
 ## Current Release
 
@@ -31,6 +31,8 @@ The current public test build is v34. It is based on the working AOSP/Android TV
   `/product/app/SmartTube/lib/arm64/`
 
 ## Flashing
+
+Boot box into loader mode by holding the recovery mode button while powering on the box. This can be done by inserting a slim device into the 3.5mm port to push the hidden button. Use a USB-A to USB-A cable to connect the box to your computer using the USB 2.0 port on the box.
 
 Use `tools/RockusbCli.ps1` from Windows PowerShell after rebooting the box into RockUSB loader mode:
 
