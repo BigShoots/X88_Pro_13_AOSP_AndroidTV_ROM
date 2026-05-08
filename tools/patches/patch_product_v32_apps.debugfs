@@ -1,0 +1,45 @@
+mkdir /app/SmartTube
+set_inode_field /app/SmartTube mode 040755
+set_inode_field /app/SmartTube uid 0
+set_inode_field /app/SmartTube gid 0
+ea_set /app/SmartTube security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v31-apps/product/app/SmartTube/SmartTube.apk /app/SmartTube/SmartTube.apk
+set_inode_field /app/SmartTube/SmartTube.apk mode 0100644
+set_inode_field /app/SmartTube/SmartTube.apk uid 0
+set_inode_field /app/SmartTube/SmartTube.apk gid 0
+ea_set /app/SmartTube/SmartTube.apk security.selinux u:object_r:system_file:s0
+mkdir /app/Downloader
+set_inode_field /app/Downloader mode 040755
+set_inode_field /app/Downloader uid 0
+set_inode_field /app/Downloader gid 0
+ea_set /app/Downloader security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v31-apps/product/app/Downloader/base.apk /app/Downloader/base.apk
+set_inode_field /app/Downloader/base.apk mode 0100644
+set_inode_field /app/Downloader/base.apk uid 0
+set_inode_field /app/Downloader/base.apk gid 0
+ea_set /app/Downloader/base.apk security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v31-apps/product/app/Downloader/split_config.arm64_v8a.apk /app/Downloader/split_config.arm64_v8a.apk
+set_inode_field /app/Downloader/split_config.arm64_v8a.apk mode 0100644
+set_inode_field /app/Downloader/split_config.arm64_v8a.apk uid 0
+set_inode_field /app/Downloader/split_config.arm64_v8a.apk gid 0
+ea_set /app/Downloader/split_config.arm64_v8a.apk security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v31-apps/product/app/Downloader/split_config.en.apk /app/Downloader/split_config.en.apk
+set_inode_field /app/Downloader/split_config.en.apk mode 0100644
+set_inode_field /app/Downloader/split_config.en.apk uid 0
+set_inode_field /app/Downloader/split_config.en.apk gid 0
+ea_set /app/Downloader/split_config.en.apk security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v31-apps/product/app/Downloader/split_config.xxhdpi.apk /app/Downloader/split_config.xxhdpi.apk
+set_inode_field /app/Downloader/split_config.xxhdpi.apk mode 0100644
+set_inode_field /app/Downloader/split_config.xxhdpi.apk uid 0
+set_inode_field /app/Downloader/split_config.xxhdpi.apk gid 0
+ea_set /app/Downloader/split_config.xxhdpi.apk security.selinux u:object_r:system_file:s0
+mkdir /app/Amaze
+set_inode_field /app/Amaze mode 040755
+set_inode_field /app/Amaze uid 0
+set_inode_field /app/Amaze gid 0
+ea_set /app/Amaze security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v32-apps/product/app/Amaze/Amaze.apk /app/Amaze/Amaze.apk
+set_inode_field /app/Amaze/Amaze.apk mode 0100644
+set_inode_field /app/Amaze/Amaze.apk uid 0
+set_inode_field /app/Amaze/Amaze.apk gid 0
+ea_set /app/Amaze/Amaze.apk security.selinux u:object_r:system_file:s0

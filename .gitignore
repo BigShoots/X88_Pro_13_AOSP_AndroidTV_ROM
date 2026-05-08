@@ -1,0 +1,38 @@
+# Generated firmware artifacts
+*.img
+*.raw.img
+*.rkfw
+*.zip
+*.7z
+*.xz
+*.tar
+*.gz
+
+# Android/build outputs
+build/
+out/
+*.apk
+*.dex
+*.class
+*.jar
+
+# Logs and local scratch
+*.log
+tmp*/
+temp*/
+firmware_unpacked/
+HANDOFF_REPORT.md
+docs/HANDOFF_REPORT.md
+tools/UartBackend.ps1
+CH347-UART-Viewer/
+uart_logs/
+flash_logs/
+security_scan/
+
+# Local toolchains
+platform-tools/
+jdk*/
+jadx*/
+aosp15_partition_tools*/
+imgRePackerRK*/
+rkdeveloptool*/

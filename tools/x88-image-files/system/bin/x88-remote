@@ -1,0 +1,3 @@
+#!/system/bin/sh
+export CLASSPATH=/system/framework/x88-hw.jar
+exec /system/bin/app_process /system/bin com.example.remote.RemoteDaemon /dev/input/event1 /system/etc/x88-remote.conf /data/local/tmp/x88-remote.log

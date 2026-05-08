@@ -1,0 +1,25 @@
+mkdir /app/SmartTube/lib
+set_inode_field /app/SmartTube/lib mode 040755
+set_inode_field /app/SmartTube/lib uid 0
+set_inode_field /app/SmartTube/lib gid 0
+ea_set /app/SmartTube/lib security.selinux u:object_r:system_file:s0
+mkdir /app/SmartTube/lib/arm64
+set_inode_field /app/SmartTube/lib/arm64 mode 040755
+set_inode_field /app/SmartTube/lib/arm64 uid 0
+set_inode_field /app/SmartTube/lib/arm64 gid 0
+ea_set /app/SmartTube/lib/arm64 security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v34-smarttube-libs/product/app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so /app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so
+set_inode_field /app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so mode 0100644
+set_inode_field /app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so uid 0
+set_inode_field /app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so gid 0
+ea_set /app/SmartTube/lib/arm64/libcronet.105.0.5195.68.so security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v34-smarttube-libs/product/app/SmartTube/lib/arm64/libglide-webp.so /app/SmartTube/lib/arm64/libglide-webp.so
+set_inode_field /app/SmartTube/lib/arm64/libglide-webp.so mode 0100644
+set_inode_field /app/SmartTube/lib/arm64/libglide-webp.so uid 0
+set_inode_field /app/SmartTube/lib/arm64/libglide-webp.so gid 0
+ea_set /app/SmartTube/lib/arm64/libglide-webp.so security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v34-smarttube-libs/product/app/SmartTube/lib/arm64/libj2v8.so /app/SmartTube/lib/arm64/libj2v8.so
+set_inode_field /app/SmartTube/lib/arm64/libj2v8.so mode 0100644
+set_inode_field /app/SmartTube/lib/arm64/libj2v8.so uid 0
+set_inode_field /app/SmartTube/lib/arm64/libj2v8.so gid 0
+ea_set /app/SmartTube/lib/arm64/libj2v8.so security.selinux u:object_r:system_file:s0

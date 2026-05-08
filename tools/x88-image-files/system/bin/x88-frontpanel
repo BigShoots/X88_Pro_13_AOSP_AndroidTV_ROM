@@ -1,0 +1,3 @@
+#!/system/bin/sh
+export CLASSPATH=/system/framework/x88-hw.jar
+exec /system/bin/app_process /system/bin com.example.led.FrontPanelDaemon /system/lib64/libled.so 15000

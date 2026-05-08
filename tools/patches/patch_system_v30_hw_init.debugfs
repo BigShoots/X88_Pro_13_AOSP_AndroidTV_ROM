@@ -1,0 +1,12 @@
+rm /system/etc/init/hw/init.rc
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v30-hw/system/etc/init/hw/init.rc /system/etc/init/hw/init.rc
+set_inode_field /system/etc/init/hw/init.rc mode 0100644
+set_inode_field /system/etc/init/hw/init.rc uid 0
+set_inode_field /system/etc/init/hw/init.rc gid 0
+ea_set /system/etc/init/hw/init.rc security.selinux u:object_r:system_file:s0
+rm /system/etc/init/x88-hw.rc
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v30-hw/system/etc/init/x88-hw.rc /system/etc/init/x88-hw.rc
+set_inode_field /system/etc/init/x88-hw.rc mode 0100644
+set_inode_field /system/etc/init/x88-hw.rc uid 0
+set_inode_field /system/etc/init/x88-hw.rc gid 0
+ea_set /system/etc/init/x88-hw.rc security.selinux u:object_r:system_file:s0

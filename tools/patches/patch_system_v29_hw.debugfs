@@ -1,0 +1,30 @@
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/lib64/libled.so /system/lib64/libled.so
+set_inode_field /system/lib64/libled.so mode 0100644
+set_inode_field /system/lib64/libled.so uid 0
+set_inode_field /system/lib64/libled.so gid 0
+ea_set /system/lib64/libled.so security.selinux u:object_r:system_lib_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/framework/x88-hw.jar /system/framework/x88-hw.jar
+set_inode_field /system/framework/x88-hw.jar mode 0100644
+set_inode_field /system/framework/x88-hw.jar uid 0
+set_inode_field /system/framework/x88-hw.jar gid 0
+ea_set /system/framework/x88-hw.jar security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/bin/x88-frontpanel /system/bin/x88-frontpanel
+set_inode_field /system/bin/x88-frontpanel mode 0100755
+set_inode_field /system/bin/x88-frontpanel uid 0
+set_inode_field /system/bin/x88-frontpanel gid 2000
+ea_set /system/bin/x88-frontpanel security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/bin/x88-remote /system/bin/x88-remote
+set_inode_field /system/bin/x88-remote mode 0100755
+set_inode_field /system/bin/x88-remote uid 0
+set_inode_field /system/bin/x88-remote gid 2000
+ea_set /system/bin/x88-remote security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/etc/init/x88-hw.rc /system/etc/init/x88-hw.rc
+set_inode_field /system/etc/init/x88-hw.rc mode 0100644
+set_inode_field /system/etc/init/x88-hw.rc uid 0
+set_inode_field /system/etc/init/x88-hw.rc gid 0
+ea_set /system/etc/init/x88-hw.rc security.selinux u:object_r:system_file:s0
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v29-hw/system/etc/x88-remote.conf /system/etc/x88-remote.conf
+set_inode_field /system/etc/x88-remote.conf mode 0100644
+set_inode_field /system/etc/x88-remote.conf uid 0
+set_inode_field /system/etc/x88-remote.conf gid 0
+ea_set /system/etc/x88-remote.conf security.selinux u:object_r:system_file:s0

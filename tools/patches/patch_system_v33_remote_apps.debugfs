@@ -1,0 +1,12 @@
+rm /system/framework/x88-hw.jar
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v33-remote/system/framework/x88-hw.jar /system/framework/x88-hw.jar
+set_inode_field /system/framework/x88-hw.jar mode 0100644
+set_inode_field /system/framework/x88-hw.jar uid 0
+set_inode_field /system/framework/x88-hw.jar gid 0
+ea_set /system/framework/x88-hw.jar security.selinux u:object_r:system_file:s0
+rm /system/etc/x88-remote.conf
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v33-remote/system/etc/x88-remote.conf /system/etc/x88-remote.conf
+set_inode_field /system/etc/x88-remote.conf mode 0100644
+set_inode_field /system/etc/x88-remote.conf uid 0
+set_inode_field /system/etc/x88-remote.conf gid 0
+ea_set /system/etc/x88-remote.conf security.selinux u:object_r:system_file:s0
