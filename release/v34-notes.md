@@ -1,29 +1,25 @@
-# v0.34-smarttube-libs
+# X88 Pro 13 AOSP Android TV ROM
 
 ## Artifact
 
-- File: `super-zygotequiesce-v34-smarttube-libs-lpmake.img`
-- Target partition: `super`
-- Size: `1,745,257,112` bytes
-- SHA256: `506261023D35B12114782750008A2DF510B70E20BE126DE1724D65A3E1A7780B`
+- File: `X88_Pro_13_AOSP.img`
+- Image type: Rockchip RKFW factory firmware package
+- Size: `1,844,335,178` bytes
+- SHA256: `769048190F36CCEA70DC71D3E38EF1D5A534ACDC2AFC36AA1B3A1119F0CD66EB`
+- Device: X88 Pro 13 RK3528 Android TV box
+- Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
 
-## Changes Since v33
+## Included
 
-- Added unpacked SmartTube native libraries under `/product/app/SmartTube/lib/arm64/`.
-- Fixes SmartTube playback failure caused by missing `libj2v8.so`.
+- Android TV launcher instead of the stock X88 launcher.
+- Rooted ADB support.
+- X88 front-panel helper service.
+- X88 remote helper service and stock remote keylayout support.
+- YouTube for Android TV.
+- SmartTube `31.63`.
+- Downloader `2.0.3-ForGoogleAndroidDevices`.
+- Amaze File Manager `3.11.2`.
 
-## Verified
+## Flashing
 
-- Android booted and `sys.boot_completed=1`.
-- ADB returned after flash.
-- `/product/app/SmartTube/lib/arm64/libj2v8.so` exists on the live device.
-- SmartTube launched a YouTube URL into `PlaybackActivity`.
-- Logcat showed normal `VideoLoaderController` and ExoPlayer activity without the previous `j2v8`/`dlopen` failure.
-- X88 remote and front-panel services remained running.
-
-## Flash Command
-
-```powershell
-.\tools\RockusbCli.ps1 write-partition -Partition super -Image .\super-zygotequiesce-v34-smarttube-libs-lpmake.img -Sparse -ChunkSectors 1024
-.\tools\RockusbCli.ps1 reset
-```
+Boot the box into loader mode, connect it with a USB-A to USB-A cable through the USB 2.0 port, then manually select `X88_Pro_13_AOSP.img` in Rockchip FactoryTool or another RKFW-compatible flashing tool.
