@@ -1,0 +1,18 @@
+rm /system/framework/x88-hw.jar
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v35-timefix/system/framework/x88-hw.jar /system/framework/x88-hw.jar
+set_inode_field /system/framework/x88-hw.jar mode 0100644
+set_inode_field /system/framework/x88-hw.jar uid 0
+set_inode_field /system/framework/x88-hw.jar gid 0
+ea_set /system/framework/x88-hw.jar security.selinux u:object_r:system_file:s0
+rm /system/etc/x88-rom-version
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v35-timefix/system/etc/x88-rom-version /system/etc/x88-rom-version
+set_inode_field /system/etc/x88-rom-version mode 0100644
+set_inode_field /system/etc/x88-rom-version uid 0
+set_inode_field /system/etc/x88-rom-version gid 0
+ea_set /system/etc/x88-rom-version security.selinux u:object_r:system_file:s0
+rm /system/build.prop
+write /mnt/c/Users/Student/Documents/x88tmp/zygotequiesce/v35-timefix/system/build.prop /system/build.prop
+set_inode_field /system/build.prop mode 0100644
+set_inode_field /system/build.prop uid 0
+set_inode_field /system/build.prop gid 0
+ea_set /system/build.prop security.selinux u:object_r:system_file:s0

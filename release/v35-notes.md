@@ -4,10 +4,11 @@
 
 - File: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
-- Size: `1,844,335,178` bytes
-- SHA256: `769048190F36CCEA70DC71D3E38EF1D5A534ACDC2AFC36AA1B3A1119F0CD66EB`
+- Size: `1,844,339,274` bytes
+- SHA256: `4D5D9510A1DF6AD8D9A32E8DA881148F0E8B0C787EE26B3A7FA2E4EE1FD2C111`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
+- ROM marker: `ro.x88.rom.version=v35-frontpanel-timefix`
 
 ## Included
 
