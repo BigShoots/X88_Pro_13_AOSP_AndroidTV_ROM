@@ -1,0 +1,9 @@
+cd /priv-app/TvSettings
+rm TvSettings.apk
+write /tmp/x88_v36_TvSettings.apk TvSettings.apk
+sif TvSettings.apk mode 0100644
+ea_set TvSettings.apk security.selinux u:object_r:system_file:s0
+rm oat/arm64/TvSettings.odex
+rm oat/arm64/TvSettings.vdex
+rmdir oat/arm64
+rmdir oat

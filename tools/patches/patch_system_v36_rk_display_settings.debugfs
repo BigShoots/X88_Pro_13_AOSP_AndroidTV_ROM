@@ -1,0 +1,13 @@
+cd /system/etc/init/hw
+rm init.rc
+write /tmp/x88_v36_init.rc init.rc
+sif init.rc mode 0100644
+ea_set init.rc security.selinux u:object_r:system_file:s0
+rm x88-rom-version
+cd /system/etc
+rm x88-rom-version
+write /tmp/x88_v36_rom_version x88-rom-version
+sif x88-rom-version mode 0100644
+ea_set x88-rom-version security.selinux u:object_r:system_file:s0
+cd /system/bin
+rm x88-zygote-restart.sh
