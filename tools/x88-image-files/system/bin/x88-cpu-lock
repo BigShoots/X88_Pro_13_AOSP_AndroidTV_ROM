@@ -1,0 +1,18 @@
+#!/system/bin/sh
+
+POLICY=/sys/devices/system/cpu/cpufreq/policy0
+MIN=$(cat "$POLICY/cpuinfo_min_freq" 2>/dev/null)
+MAX=$(cat "$POLICY/cpuinfo_max_freq" 2>/dev/null)
+
+[ -n "$MIN" ] || MIN=408000
+[ -n "$MAX" ] || MAX=2016000
+
+if [ "$(getprop persist.x88.cpu_max_lock)" = "1" ]; then
+    echo "$MAX" > "$POLICY/scaling_max_freq" 2>/dev/null
+    echo "$MAX" > "$POLICY/scaling_min_freq" 2>/dev/null
+    echo performance > "$POLICY/scaling_governor" 2>/dev/null
+else
+    echo "$MIN" > "$POLICY/scaling_min_freq" 2>/dev/null
+    echo "$MAX" > "$POLICY/scaling_max_freq" 2>/dev/null
+    echo interactive > "$POLICY/scaling_governor" 2>/dev/null
+fi

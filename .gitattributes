@@ -1,0 +1,6 @@
+*.sh text eol=lf
+*.rc text eol=lf
+*.conf text eol=lf
+*.debugfs text eol=lf
+tools/x88-image-files/system/bin/* text eol=lf
+tools/x88-image-files/vendor/usr/keylayout/* text eol=lf

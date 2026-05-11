@@ -7,6 +7,10 @@ public class Preference {
         boolean onPreferenceClick(Preference preference);
     }
 
+    public interface OnPreferenceChangeListener {
+        boolean onPreferenceChange(Preference preference, Object newValue);
+    }
+
     public Preference(Context context) {}
     public void setKey(String key) {}
     public String getKey() { return null; }
@@ -17,4 +21,5 @@ public class Preference {
     public void setOrder(int order) {}
     public void setFragment(String fragment) {}
     public void setOnPreferenceClickListener(OnPreferenceClickListener listener) {}
+    public void setOnPreferenceChangeListener(OnPreferenceChangeListener listener) {}
 }

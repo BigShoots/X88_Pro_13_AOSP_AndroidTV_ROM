@@ -3,11 +3,37 @@ rm init.rc
 write /tmp/x88_v36_init.rc init.rc
 sif init.rc mode 0100644
 ea_set init.rc security.selinux u:object_r:system_file:s0
+cd /system
+rm build.prop
+write /tmp/x88_v36_build_prop build.prop
+sif build.prop mode 0100644
+ea_set build.prop security.selinux u:object_r:system_file:s0
 rm x88-rom-version
 cd /system/etc
 rm x88-rom-version
 write /tmp/x88_v36_rom_version x88-rom-version
 sif x88-rom-version mode 0100644
 ea_set x88-rom-version security.selinux u:object_r:system_file:s0
+rm x88-remote.conf
+write /tmp/x88_v36_x88_remote_conf x88-remote.conf
+sif x88-remote.conf mode 0100644
+ea_set x88-remote.conf security.selinux u:object_r:system_file:s0
+cd /system/framework
+rm x88-hw.jar
+write /tmp/x88_v36_x88_hw.jar x88-hw.jar
+sif x88-hw.jar mode 0100644
+ea_set x88-hw.jar security.selinux u:object_r:system_file:s0
 cd /system/bin
 rm x88-zygote-restart.sh
+rm x88-cpu-lock
+write /tmp/x88_v36_cpu_lock x88-cpu-lock
+sif x88-cpu-lock mode 0100755
+ea_set x88-cpu-lock security.selinux u:object_r:system_file:s0
+rm x88-remote
+write /tmp/x88_v36_x88_remote x88-remote
+sif x88-remote mode 0100755
+ea_set x88-remote security.selinux u:object_r:system_file:s0
+rm x88-remote-support
+write /tmp/x88_v36_x88_remote_support x88-remote-support
+sif x88-remote-support mode 0100755
+ea_set x88-remote-support security.selinux u:object_r:system_file:s0

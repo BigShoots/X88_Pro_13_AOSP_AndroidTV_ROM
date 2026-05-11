@@ -2,18 +2,18 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v36. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
+The current public test build is v42. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
 
 ## Current Release
 
-- Release tag: `v0.36`
+- Release tag: `v0.42`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
-- Size: `1,844,374,090` bytes
-- SHA256: `902179FBD08A9142F7343809C20FB872BBC54CF947042338F6E46E4A9F092BCD`
+- Size: `1,844,390,474` bytes
+- SHA256: `0E4C9BD92D9D7B437F08BA958234732CC00C6973E54B80CFF4170CD94B1D2C8A`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
-- ROM marker: `version=v36-rk-display-settings`
+- ROM marker: `version=v42-ir-mouse`
 
 ## What Is Included
 
@@ -21,8 +21,9 @@ The current public test build is v36. It is based on the AOSP/Android TV image c
 - Rooted ADB support.
 - X88 front-panel helper service.
 - X88 remote helper service and stock remote keylayout support.
+- IR cursor/mouse mode for the stock remote through a UHID virtual mouse.
 - Rockchip display controls integrated into Android TV Display settings.
-- YouTube for Android TV.
+- CPU max-speed lock setting under Device Preferences.
 - SmartTube `31.63`.
 - Downloader `2.0.3-ForGoogleAndroidDevices`.
 - Amaze File Manager `3.11.2`.

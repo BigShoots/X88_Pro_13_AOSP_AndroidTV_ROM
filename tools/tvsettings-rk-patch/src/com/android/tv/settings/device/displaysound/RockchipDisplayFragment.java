@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -149,9 +150,12 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
                 + "\nHAL display index: " + display
                 + "\nConnector slots reported: " + connectors
                 + "\nConnector type: " + builtIn
-                + "\nMode: " + mode
+                + "\nHAL selected mode: " + mode
+                + "\nPhysical HDMI mode: " + getProp("vendor.hwc.resolution_mode", "unknown")
+                + "\nSaved HDMI mode: " + getProp("persist.vendor.resolution.HDMI-A-0", "unknown")
+                + "\nAndroid refresh policy: " + getSetting("system", "min_refresh_rate")
+                + " - " + getSetting("system", "peak_refresh_rate") + " Hz"
                 + "\nColor: " + color
-                + "\nAndroid resolution: " + getProp("vendor.hwc.resolution_mode", "unknown")
                 + "\nHDR state: " + getProp("vendor.hwc.hdr_state", "unknown")
                 + "  SurfaceFlinger HDR: " + getProp("ro.surface_flinger.has_HDR_display", "unknown")
                 + "\nCurrent mode HDR support: " + rk.getHdrResolutionSupported(display, mode)
@@ -299,6 +303,7 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
                 toast("Mode failed: " + result);
                 return;
             }
+            syncAndroidRefreshPolicy(mode);
             if (persistImmediately) {
                 rk.saveConfig();
                 toast("Mode saved");
@@ -324,6 +329,7 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
                     public void onClick(DialogInterface dialogInterface, int which) {
                         handled[0] = true;
                         try {
+                            syncAndroidRefreshPolicy(mode);
                             rk.saveConfig();
                             toast("Mode saved");
                         } catch (Throwable t) {
@@ -376,6 +382,7 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
     private void revertMode(String previous) {
         try {
             rk.setMode(display, previous);
+            syncAndroidRefreshPolicy(previous);
             rk.saveConfig();
             toast("Mode reverted");
         } catch (Throwable t) {
@@ -428,6 +435,41 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
         refresh();
     }
 
+    private void syncAndroidRefreshPolicy(String mode) {
+        // Rockchip's output HAL owns the physical HDMI timing. Android only sees
+        // one logical display mode on this build, so writing framework refresh
+        // policy here can leave stale 120 Hz/app pacing state after HDMI tests.
+        // Keep this method as a no-op so old call sites remain harmless.
+    }
+
+    private float parseRefreshRate(String mode) {
+        if (mode == null || "Auto".equals(mode)) {
+            return 0f;
+        }
+        int at = mode.indexOf('@');
+        int dash = mode.indexOf('-', at + 1);
+        if (at < 0 || dash <= at) {
+            return 0f;
+        }
+        try {
+            return Float.parseFloat(mode.substring(at + 1, dash));
+        } catch (Throwable t) {
+            return 0f;
+        }
+    }
+
+    private void putFloatSetting(String namespace, String key, float value) {
+        try {
+            if ("global".equals(namespace)) {
+                Settings.Global.putFloat(context().getContentResolver(), key, value);
+            } else {
+                Settings.System.putFloat(context().getContentResolver(), key, value);
+            }
+        } catch (Throwable t) {
+            warn("Refresh policy write failed: " + namespace + "." + key, t);
+        }
+    }
+
     private void addCategory(String title) {
         PreferenceCategory category = new PreferenceCategory(getPreferenceManager().getContext());
         category.setTitle(title);
@@ -467,6 +509,20 @@ public final class RockchipDisplayFragment extends SettingsPreferenceFragment {
             return String.valueOf(method.invoke(null, key, fallback));
         } catch (Throwable t) {
             return fallback;
+        }
+    }
+
+    private String getSetting(String namespace, String key) {
+        try {
+            String value;
+            if ("global".equals(namespace)) {
+                value = Settings.Global.getString(context().getContentResolver(), key);
+            } else {
+                value = Settings.System.getString(context().getContentResolver(), key);
+            }
+            return value == null || value.length() == 0 ? "default" : value;
+        } catch (Throwable t) {
+            return "unknown";
         }
     }
 

@@ -1,0 +1,9 @@
+#!/system/bin/sh
+
+cmd display clear-user-preferred-display-mode >/dev/null 2>&1 || true
+cmd display clear-user-preferred-display-mode 0 >/dev/null 2>&1 || true
+cmd display set-match-content-frame-rate-pref 0 >/dev/null 2>&1 || true
+settings delete system peak_refresh_rate >/dev/null 2>&1 || true
+settings delete system min_refresh_rate >/dev/null 2>&1 || true
+settings delete global peak_refresh_rate >/dev/null 2>&1 || true
+settings delete global min_refresh_rate >/dev/null 2>&1 || true
