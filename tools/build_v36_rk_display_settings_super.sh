@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="/mnt/c/Users/Student/Documents/X88 FIrmware"
 PARTS="${ROOT}/firmware_unpacked/X88_Pro_13_AOSP.img.dump/super_parts"
-WORK="${ROOT}/work_tvsettings_rk/v43_cec_bt"
-TAG="v43-cec-bt"
+WORK="${ROOT}/work_tvsettings_rk/v44_cec_menu"
+TAG="v44-cec-menu"
 LPTOOLS="${ROOT}/tools/aosp15_partition_tools-main/linux_glibc_x86_64"
 PATCH_DIR="${ROOT}/tools/patches"
 
