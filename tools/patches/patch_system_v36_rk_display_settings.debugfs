@@ -18,6 +18,11 @@ rm x88-remote.conf
 write /tmp/x88_v36_x88_remote_conf x88-remote.conf
 sif x88-remote.conf mode 0100644
 ea_set x88-remote.conf security.selinux u:object_r:system_file:s0
+cd /system/etc/permissions
+rm privapp-permissions-com.swe.myapplication.xml
+write /tmp/x88_v36_btremotehelp_privapp privapp-permissions-com.swe.myapplication.xml
+sif privapp-permissions-com.swe.myapplication.xml mode 0100644
+ea_set privapp-permissions-com.swe.myapplication.xml security.selinux u:object_r:system_file:s0
 cd /system/framework
 rm x88-hw.jar
 write /tmp/x88_v36_x88_hw.jar x88-hw.jar
@@ -29,6 +34,10 @@ rm x88-cpu-lock
 write /tmp/x88_v36_cpu_lock x88-cpu-lock
 sif x88-cpu-lock mode 0100755
 ea_set x88-cpu-lock security.selinux u:object_r:system_file:s0
+rm x88-cec-bt-setup
+write /tmp/x88_v36_cec_bt_setup x88-cec-bt-setup
+sif x88-cec-bt-setup mode 0100755
+ea_set x88-cec-bt-setup security.selinux u:object_r:system_file:s0
 rm x88-remote
 write /tmp/x88_v36_x88_remote x88-remote
 sif x88-remote mode 0100755

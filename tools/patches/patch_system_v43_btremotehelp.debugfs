@@ -1,0 +1,9 @@
+cd /system/priv-app
+mkdir BtRemotehelp
+sif BtRemotehelp mode 040755
+ea_set BtRemotehelp security.selinux u:object_r:system_file:s0
+cd BtRemotehelp
+rm BtRemotehelp.apk
+write /tmp/x88_v36_BtRemotehelp.apk BtRemotehelp.apk
+sif BtRemotehelp.apk mode 0100644
+ea_set BtRemotehelp.apk security.selinux u:object_r:system_file:s0

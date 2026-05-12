@@ -20,7 +20,16 @@ service x88-remote-support /system/bin/sh /system/bin/x88-remote-support
     oneshot
     seclabel u:r:shell:s0
 
+service x88-cec-bt-setup /system/bin/sh /system/bin/x88-cec-bt-setup
+    class late_start
+    user root
+    group root shell system bluetooth
+    disabled
+    oneshot
+    seclabel u:r:shell:s0
+
 on property:sys.boot_completed=1
     start x88-remote-support
+    start x88-cec-bt-setup
     start x88-frontpanel
     start x88-remote

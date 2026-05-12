@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="/mnt/c/Users/Student/Documents/X88 FIrmware"
 PARTS="${ROOT}/firmware_unpacked/X88_Pro_13_AOSP.img.dump/super_parts"
-WORK="${ROOT}/work_tvsettings_rk/v42_ir_mouse"
-TAG="v42-ir-mouse"
+WORK="${ROOT}/work_tvsettings_rk/v43_cec_bt"
+TAG="v43-cec-bt"
 LPTOOLS="${ROOT}/tools/aosp15_partition_tools-main/linux_glibc_x86_64"
 PATCH_DIR="${ROOT}/tools/patches"
 
@@ -27,12 +27,24 @@ cp -f "${ROOT}/work_tvsettings_rk/TvSettings_x88_rk_internal_signed.apk" /tmp/x8
 cp -f "${ROOT}/tools/x88-image-files/system/etc/init/hw/init.rc" /tmp/x88_v36_init.rc
 cp -f "${ROOT}/tools/x88-image-files/system/etc/x88-rom-version" /tmp/x88_v36_rom_version
 cp -f "${ROOT}/tools/x88-image-files/system/bin/x88-cpu-lock" /tmp/x88_v36_cpu_lock
+cp -f "${ROOT}/tools/x88-image-files/system/bin/x88-cec-bt-setup" /tmp/x88_v36_cec_bt_setup
 cp -f "${ROOT}/tools/frontpanel-test/build/x88-hw.jar" /tmp/x88_v36_x88_hw.jar
 cp -f "${ROOT}/tools/x88-image-files/system/bin/x88-remote" /tmp/x88_v36_x88_remote
 cp -f "${ROOT}/tools/x88-image-files/system/bin/x88-remote-support" /tmp/x88_v36_x88_remote_support
 cp -f "${ROOT}/tools/x88-image-files/system/etc/x88-remote.conf" /tmp/x88_v36_x88_remote_conf
 cp -f "${ROOT}/tools/x88-image-files/system/etc/x88-build.prop.append" /tmp/x88_v36_build_prop_append
+cp -f "${ROOT}/tools/x88-image-files/system/etc/permissions/privapp-permissions-com.swe.myapplication.xml" /tmp/x88_v36_btremotehelp_privapp
 cp -f "${ROOT}/tools/x88-image-files/vendor/usr/keylayout/ffa90030_pwm.kl" /tmp/x88_v36_ffa90030_pwm_kl
+
+SYSTEM_PATCH="/tmp/x88_v36_system_patch.debugfs"
+cp -f "${PATCH_DIR}/patch_system_v36_rk_display_settings.debugfs" "${SYSTEM_PATCH}"
+BTREMOTE_SRC="${ROOT}/tools/x88-image-files/system/priv-app/BtRemotehelp/BtRemotehelp.apk"
+if [ -f "${BTREMOTE_SRC}" ]; then
+  cp -f "${BTREMOTE_SRC}" /tmp/x88_v36_BtRemotehelp.apk
+  cat "${PATCH_DIR}/patch_system_v43_btremotehelp.debugfs" >> "${SYSTEM_PATCH}"
+else
+  echo "WARN: BtRemotehelp.apk not present; image will omit the stock Bluetooth remote pairing helper." >&2
+fi
 
 debugfs -R "dump /system/build.prop /tmp/x88_v36_build_prop_base" "${WORK}/system.img"
 awk -F= '
@@ -57,7 +69,7 @@ awk -F= '
 
 debugfs -w -f "${PATCH_DIR}/patch_system_ext_v36_rk_display_settings.debugfs" "${WORK}/system_ext.img"
 e2fsck -fy "${WORK}/system_ext.img" || [ "$?" -eq 1 ]
-debugfs -w -f "${PATCH_DIR}/patch_system_v36_rk_display_settings.debugfs" "${WORK}/system.img"
+debugfs -w -f "${SYSTEM_PATCH}" "${WORK}/system.img"
 e2fsck -fy "${WORK}/system.img" || [ "$?" -eq 1 ]
 debugfs -w -f "${PATCH_DIR}/patch_vendor_v36_rk_display_settings.debugfs" "${WORK}/vendor.img"
 e2fsck -fy "${WORK}/vendor.img" || [ "$?" -eq 1 ]

@@ -2,18 +2,18 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v42. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
+The current public test build is v43. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
 
 ## Current Release
 
-- Release tag: `v0.42`
+- Release tag: `v0.43`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
-- Size: `1,844,390,474` bytes
-- SHA256: `0E4C9BD92D9D7B437F08BA958234732CC00C6973E54B80CFF4170CD94B1D2C8A`
+- Size: `1,862,523,466` bytes
+- SHA256: `05D6D9E534ABA47416F54DDB00D65422673711EEA88331859511EE46C4D0EBF4`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
-- ROM marker: `version=v42-ir-mouse`
+- ROM marker: `version=v43-cec-bt`
 
 ## What Is Included
 
@@ -22,6 +22,8 @@ The current public test build is v42. It is based on the AOSP/Android TV image c
 - X88 front-panel helper service.
 - X88 remote helper service and stock remote keylayout support.
 - IR cursor/mouse mode for the stock remote through a UHID virtual mouse.
+- HDMI-CEC defaults enabled at first boot.
+- Stock Bluetooth remote pairing helper included in the release image.
 - Rockchip display controls integrated into Android TV Display settings.
 - CPU max-speed lock setting under Device Preferences.
 - SmartTube `31.63`.
@@ -46,4 +48,4 @@ The release image is a full factory firmware package, not a raw `super` partitio
 
 ## Notes
 
-This repository contains the source/configuration/scripts used for the custom ROM work. Large generated images, UART tooling/logs, handoff notes, and proprietary stock firmware extracts are not stored in git; the flashable build is attached to the GitHub release.
+This repository contains the source/configuration/scripts used for the custom ROM work. Large generated images, UART tooling/logs, handoff notes, proprietary stock firmware extracts, and the optional stock Bluetooth pairing helper APK are not stored in git; the flashable build is attached to the GitHub release.

@@ -1,0 +1,44 @@
+#!/system/bin/sh
+
+log -t x88-cec-bt-setup "Applying HDMI-CEC and Bluetooth pairing defaults"
+
+# Legacy Android TV HDMI-CEC globals used by HdmiControlService.
+settings put global hdmi_control_enabled 1
+settings put global hdmi_control_auto_wakeup_enabled 1
+settings put global hdmi_control_auto_device_off_enabled 1
+settings put global hdmi_system_audio_control_enabled 1
+settings put global hdmi_cec_volume_control_enabled 1
+settings put global hdmi_control_volume_control_enabled 1
+
+# Newer CEC config keys used by Android 12+.
+settings put global hdmi_cec_enabled 1
+settings put global hdmi_cec_version 6
+settings put global routing_control 1
+settings put global power_control_mode to_tv
+settings put global power_state_change_on_active_source_lost none
+settings put global system_audio_control 1
+settings put global system_audio_mode_muting 1
+settings put global volume_control_enabled 1
+settings put global tv_wake_on_one_touch_play 1
+settings put global tv_send_standby_on_sleep 1
+settings put global set_menu_language 1
+
+setprop persist.sys.hdmi.control.enabled 1
+setprop persist.sys.hdmi.cec.switch.enabled 1
+setprop persist.sys.hdmi.cec.power_control_mode to_tv
+
+# Keep Bluetooth logging on for remote-side troubleshooting of pairing failures.
+setprop persist.bluetooth.btsnoopenable true
+setprop persist.bluetooth.btsnooplogmode full
+
+if cmd package list packages com.swe.myapplication 2>/dev/null | grep -q com.swe.myapplication; then
+    pm grant com.swe.myapplication android.permission.ACCESS_COARSE_LOCATION >/dev/null 2>&1 || true
+    pm grant com.swe.myapplication android.permission.ACCESS_FINE_LOCATION >/dev/null 2>&1 || true
+    pm grant com.swe.myapplication android.permission.BLUETOOTH_SCAN >/dev/null 2>&1 || true
+    pm grant com.swe.myapplication android.permission.BLUETOOTH_CONNECT >/dev/null 2>&1 || true
+    appops set com.swe.myapplication SYSTEM_ALERT_WINDOW allow >/dev/null 2>&1 || true
+    am start-foreground-service --user 0 -n com.swe.myapplication/.DetectService --ei type 1 >/dev/null 2>&1 || true
+    log -t x88-cec-bt-setup "Started stock Bluetooth remote pairing helper"
+else
+    log -t x88-cec-bt-setup "Bluetooth remote pairing helper package not installed"
+fi

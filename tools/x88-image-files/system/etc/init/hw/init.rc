@@ -46,6 +46,13 @@ service x88-remote-support /system/bin/sh /system/bin/x88-remote-support
     group root shell system
     seclabel u:r:shell:s0
 
+service x88-cec-bt-setup /system/bin/sh /system/bin/x88-cec-bt-setup
+    disabled
+    oneshot
+    user root
+    group root shell system bluetooth
+    seclabel u:r:shell:s0
+
 service x88-frontpanel /system/bin/sh /system/bin/x88-frontpanel
     disabled
     user root
@@ -63,6 +70,7 @@ on property:sys.boot_completed=1
     start x88-adb-root
     start x88-cpu-lock
     start x88-remote-support
+    start x88-cec-bt-setup
     start x88-frontpanel
     start x88-remote
 
