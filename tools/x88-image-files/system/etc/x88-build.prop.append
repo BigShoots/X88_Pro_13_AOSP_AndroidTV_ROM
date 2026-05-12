@@ -1,37 +1,10 @@
 # X88 IR remote/display/CEC/Bluetooth support.
-ro.x88.rom.name=X88_Pro_13_AOSP
-ro.x88.rom.version=v45-bt-audio
-ro.x88.rom.date=2026-05-12
-ro.x88.rom.factory_package=true
 ro.hdmi.device_type=4
 ro.hdmi.property_is_device_hdmi_cec_switch=false
 ro.hdmi.cec_audio_device_forward_volume_keys_system_audio_mode_off=true
 persist.sys.hdmi.control.enabled=1
 persist.sys.hdmi.cec.switch.enabled=1
 persist.sys.hdmi.cec.power_control_mode=to_tv
-
-# Keep the stock BLE remote helper active and make sure the platform exposes
-# the HID host profile used by Bluetooth remotes.
-persist.bleRemote.open=1
-ro.bleRemote.pair.mode=1
-ro.bleRemote.dev.name=HBG_RC
-ro.bleRemote.auto_remove_bound_device=0
-ro.bleRemote.remove_bound_device.reboot_count=2
-bluetooth.profile.asha.central.enabled=true
-bluetooth.profile.a2dp.source.enabled=true
-bluetooth.profile.avrcp.target.enabled=true
-bluetooth.profile.bas.client.enabled=true
-bluetooth.profile.gatt.enabled=true
-bluetooth.profile.hid.device.enabled=true
-bluetooth.profile.hid.host.enabled=true
-bluetooth.profile.opp.enabled=true
-bluetooth.profile.pan.nap.enabled=true
-bluetooth.profile.pan.panu.enabled=true
-bluetooth.profile.sap.server.enabled=true
-bluetooth.core.gap.le.privacy.enabled=false
-bluetooth.profile.hfp.ag.enabled=false
-bluetooth.profile.map.server.enabled=false
-bluetooth.profile.pbap.server.enabled=false
 persist.bluetooth.btsnoopenable=true
 persist.bluetooth.btsnooplogmode=full
 persist.bluetooth.rtkcoex=true

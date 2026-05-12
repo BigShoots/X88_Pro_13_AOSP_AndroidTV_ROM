@@ -27,31 +27,15 @@ setprop persist.sys.hdmi.control.enabled 1
 setprop persist.sys.hdmi.cec.switch.enabled 1
 setprop persist.sys.hdmi.cec.power_control_mode to_tv
 
-# Seed manual passthrough support for the formats exposed by the vendor audio
-# policy if Android has not created these settings yet. This avoids starting
-# with every surround format off while still preserving later user changes.
-surround_mode="$(settings get global encoded_surround_output 2>/dev/null)"
-surround_formats="$(settings get global encoded_surround_output_enabled_formats 2>/dev/null)"
-if [ -z "${surround_mode}" ] || [ "${surround_mode}" = "null" ]; then
-    settings put global encoded_surround_output 3
-fi
-if [ -z "${surround_formats}" ] || [ "${surround_formats}" = "null" ]; then
-    settings put global encoded_surround_output_enabled_formats 5,6,7,8,18
-fi
-
 # Keep Bluetooth logging on for remote-side troubleshooting of pairing failures.
-setprop persist.bleRemote.open 1
 setprop persist.bluetooth.btsnoopenable true
 setprop persist.bluetooth.btsnooplogmode full
-setprop persist.bluetooth.rtkcoex true
 
 if cmd package list packages com.swe.myapplication 2>/dev/null | grep -q com.swe.myapplication; then
     pm grant com.swe.myapplication android.permission.ACCESS_COARSE_LOCATION >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.ACCESS_FINE_LOCATION >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.BLUETOOTH_SCAN >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.BLUETOOTH_CONNECT >/dev/null 2>&1 || true
-    pm grant com.swe.myapplication android.permission.READ_EXTERNAL_STORAGE >/dev/null 2>&1 || true
-    pm grant com.swe.myapplication android.permission.WRITE_EXTERNAL_STORAGE >/dev/null 2>&1 || true
     appops set com.swe.myapplication SYSTEM_ALERT_WINDOW allow >/dev/null 2>&1 || true
     am start-foreground-service --user 0 -n com.swe.myapplication/.DetectService --ei type 1 >/dev/null 2>&1 || true
     log -t x88-cec-bt-setup "Started stock Bluetooth remote pairing helper"
