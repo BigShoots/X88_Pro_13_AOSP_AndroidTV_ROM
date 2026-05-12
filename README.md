@@ -2,18 +2,19 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v44. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
+The current public test build is v46. It rolls back to the v44 baseline after regressions were found in v45. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
 
 ## Current Release
 
-- Release tag: `v0.44`
+- Release tag: `v0.46`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
 - Size: `1,862,527,562` bytes
-- SHA256: `0918B349AE17089E748A9805F59FF5CF5D247B6A86747C3413E7F9340F78FF63`
+- SHA256: `CDAAD77B22F15C2A6E610D89D92A0F56BFF916EC8F9BF25148C4179A641501BF`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
 - ROM marker: `version=v44-cec-menu`
+- Baseline: v44 rollback build
 
 ## What Is Included
 
