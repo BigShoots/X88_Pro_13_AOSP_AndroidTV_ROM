@@ -1,0 +1,5 @@
+# UR02 Bluetooth remote HID exposes a keyboard collection, but it is not a
+# usable text keyboard for Android TV.  Mark it as special-function so Android
+# does not suppress/alter the on-screen TV keyboard as if QWERTY hardware is
+# attached.
+type SPECIAL_FUNCTION

@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="/mnt/c/Users/Student/Documents/X88 FIrmware"
 PARTS="${ROOT}/firmware_unpacked/X88_Pro_13_AOSP.img.dump/super_parts"
-WORK="${ROOT}/work_tvsettings_rk/v44_cec_menu"
-TAG="v44-cec-menu"
+WORK="${ROOT}/work_tvsettings_rk/v58_blehid_mic_keyboard"
+TAG="v58-blehid-mic-keyboard"
 LPTOOLS="${ROOT}/tools/aosp15_partition_tools-main/linux_glibc_x86_64"
 PATCH_DIR="${ROOT}/tools/patches"
 
@@ -16,12 +16,14 @@ mkdir -p "${WORK}"
 rm -f \
   "${WORK}/system.img" \
   "${WORK}/system_ext.img" \
+  "${WORK}/product.img" \
   "${WORK}/vendor.img" \
   "${WORK}/super-${TAG}.raw.img" \
   "${WORK}/super-${TAG}.img" \
   "${WORK}/lpdumps-${TAG}.txt"
 cp -f "${PARTS}/system_ext.img" "${WORK}/system_ext.img"
 cp -f "${PARTS}/system.img" "${WORK}/system.img"
+cp -f "${PARTS}/product.img" "${WORK}/product.img"
 cp -f "${PARTS}/vendor.img" "${WORK}/vendor.img"
 cp -f "${ROOT}/work_tvsettings_rk/TvSettings_x88_rk_internal_signed.apk" /tmp/x88_v36_TvSettings.apk
 cp -f "${ROOT}/tools/x88-image-files/system/etc/init/hw/init.rc" /tmp/x88_v36_init.rc
@@ -34,7 +36,17 @@ cp -f "${ROOT}/tools/x88-image-files/system/bin/x88-remote-support" /tmp/x88_v36
 cp -f "${ROOT}/tools/x88-image-files/system/etc/x88-remote.conf" /tmp/x88_v36_x88_remote_conf
 cp -f "${ROOT}/tools/x88-image-files/system/etc/x88-build.prop.append" /tmp/x88_v36_build_prop_append
 cp -f "${ROOT}/tools/x88-image-files/system/etc/permissions/privapp-permissions-com.swe.myapplication.xml" /tmp/x88_v36_btremotehelp_privapp
+cp -f "${ROOT}/tools/x88-image-files/system/usr/keylayout/Vendor_0508_Product_1980.kl" /tmp/x88_v52_ur02_kl
+cp -f "${ROOT}/tools/x88-image-files/system/usr/keychars/Vendor_0508_Product_1980.kcm" /tmp/x88_v51_ur02_kcm
 cp -f "${ROOT}/tools/x88-image-files/vendor/usr/keylayout/ffa90030_pwm.kl" /tmp/x88_v36_ffa90030_pwm_kl
+cp -f "${ROOT}/tools/x88-image-files/vendor/etc/audio_policy_configuration.xml" /tmp/x88_v47_audio_policy_configuration
+cp -f "${ROOT}/tools/x88-image-files/product/app/Gboard/Gboard.apk" /tmp/x88_v49_Gboard.apk
+cp -f "${ROOT}/tools/x88-image-files/product/app/LeanKeyboard/base.apk" /tmp/x88_v54_LeanKeyboard_base.apk
+cp -f "${ROOT}/tools/x88-image-files/product/app/LeanKeyboard/split_config.en.apk" /tmp/x88_v54_LeanKeyboard_split_config_en.apk
+cp -f "${ROOT}/tools/x88-image-files/product/app/LeanKeyboard/split_config.fr.apk" /tmp/x88_v54_LeanKeyboard_split_config_fr.apk
+cp -f "${ROOT}/tools/x88-image-files/product/app/LeanKeyboard/split_config.hdpi.apk" /tmp/x88_v54_LeanKeyboard_split_config_hdpi.apk
+cp -f "${ROOT}/tools/x88-image-files/product/app/FileManagerPlus/base.apk" /tmp/x88_v54_FileManagerPlus_base.apk
+cp -f "${ROOT}/tools/x88-image-files/product/etc/x88/AtvRemoteService-v57-audiopolicy.apk" /tmp/x88_v57_AtvRemoteService_audiopolicy.apk
 
 SYSTEM_PATCH="/tmp/x88_v36_system_patch.debugfs"
 cp -f "${PATCH_DIR}/patch_system_v36_rk_display_settings.debugfs" "${SYSTEM_PATCH}"
@@ -71,6 +83,10 @@ debugfs -w -f "${PATCH_DIR}/patch_system_ext_v36_rk_display_settings.debugfs" "$
 e2fsck -fy "${WORK}/system_ext.img" || [ "$?" -eq 1 ]
 debugfs -w -f "${SYSTEM_PATCH}" "${WORK}/system.img"
 e2fsck -fy "${WORK}/system.img" || [ "$?" -eq 1 ]
+truncate -s 900M "${WORK}/product.img"
+resize2fs "${WORK}/product.img"
+debugfs -w -f "${PATCH_DIR}/patch_product_v54_tv_keyboard_filemanagerplus.debugfs" "${WORK}/product.img"
+e2fsck -fy "${WORK}/product.img" || [ "$?" -eq 1 ]
 debugfs -w -f "${PATCH_DIR}/patch_vendor_v36_rk_display_settings.debugfs" "${WORK}/vendor.img"
 e2fsck -fy "${WORK}/vendor.img" || [ "$?" -eq 1 ]
 
@@ -94,8 +110,8 @@ e2fsck -fy "${WORK}/vendor.img" || [ "$?" -eq 1 ]
   --image odm="${PARTS}/odm.img" \
   --partition odm_dlkm:readonly:262144:rockchip_dynamic_partitions \
   --image odm_dlkm="${PARTS}/odm_dlkm.img" \
-  --partition product:readonly:734003200:rockchip_dynamic_partitions \
-  --image product="${PARTS}/product.img" \
+  --partition product:readonly:943718400:rockchip_dynamic_partitions \
+  --image product="${WORK}/product.img" \
   --output "${WORK}/super-${TAG}.raw.img"
 
 /usr/bin/img2simg \

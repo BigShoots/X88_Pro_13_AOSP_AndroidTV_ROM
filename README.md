@@ -2,19 +2,19 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v46. It rolls back to the v44 baseline after regressions were found in v45. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience.
+The current public test build is v58. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience. This release keeps the Android TV/Google TV app stack while fixing UR02 remote microphone routing for app voice search and the LeanKeyboard voice button.
 
 ## Current Release
 
-- Release tag: `v0.46`
+- Release tag: `v0.58`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
-- Size: `1,862,527,562` bytes
-- SHA256: `CDAAD77B22F15C2A6E610D89D92A0F56BFF916EC8F9BF25148C4179A641501BF`
+- Size: `1,958,865,482` bytes
+- SHA256: `85594F1E8191CFD264C6C01A2E08FB9B8C4FAA46D2E47F729E9E50AC6250C69D`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
-- ROM marker: `version=v44-cec-menu`
-- Baseline: v44 rollback build
+- ROM marker: `version=v58-blehid-mic-keyboard`
+- Baseline: v58 tested build
 
 ## What Is Included
 
@@ -28,9 +28,12 @@ The current public test build is v46. It rolls back to the v44 baseline after re
 - Stock Bluetooth remote pairing helper included in the release image.
 - Rockchip display controls integrated into Android TV Display settings.
 - CPU max-speed lock setting under Device Preferences.
+- UR02 BLE remote microphone exposed through the BLEHID audio HAL for app voice search.
+- Katniss selected as the default speech recognizer.
+- LeanKeyboard TV selected as the default IME, with voice/search permissions pre-granted.
+- File Manager Plus replaces Amaze File Manager.
 - SmartTube `31.63`.
 - Downloader `2.0.3-ForGoogleAndroidDevices`.
-- Amaze File Manager `3.11.2`.
 
 ## Flashing
 

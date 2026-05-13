@@ -1,0 +1,50 @@
+cd /app
+mkdir Gboard
+sif Gboard mode 040755
+ea_set Gboard security.selinux u:object_r:system_file:s0
+cd Gboard
+rm Gboard.apk
+write /tmp/x88_v49_Gboard.apk Gboard.apk
+sif Gboard.apk mode 0100644
+ea_set Gboard.apk security.selinux u:object_r:system_file:s0
+cd /app
+rm Amaze/Amaze.apk
+rmdir Amaze
+mkdir LeanKeyboard
+sif LeanKeyboard mode 040755
+ea_set LeanKeyboard security.selinux u:object_r:system_file:s0
+cd LeanKeyboard
+rm base.apk
+rm split_config.en.apk
+rm split_config.fr.apk
+rm split_config.hdpi.apk
+write /tmp/x88_v54_LeanKeyboard_base.apk base.apk
+sif base.apk mode 0100644
+ea_set base.apk security.selinux u:object_r:system_file:s0
+write /tmp/x88_v54_LeanKeyboard_split_config_en.apk split_config.en.apk
+sif split_config.en.apk mode 0100644
+ea_set split_config.en.apk security.selinux u:object_r:system_file:s0
+write /tmp/x88_v54_LeanKeyboard_split_config_fr.apk split_config.fr.apk
+sif split_config.fr.apk mode 0100644
+ea_set split_config.fr.apk security.selinux u:object_r:system_file:s0
+write /tmp/x88_v54_LeanKeyboard_split_config_hdpi.apk split_config.hdpi.apk
+sif split_config.hdpi.apk mode 0100644
+ea_set split_config.hdpi.apk security.selinux u:object_r:system_file:s0
+cd /app
+mkdir FileManagerPlus
+sif FileManagerPlus mode 040755
+ea_set FileManagerPlus security.selinux u:object_r:system_file:s0
+cd FileManagerPlus
+rm base.apk
+write /tmp/x88_v54_FileManagerPlus_base.apk base.apk
+sif base.apk mode 0100644
+ea_set base.apk security.selinux u:object_r:system_file:s0
+cd /etc
+mkdir x88
+sif x88 mode 040755
+ea_set x88 security.selinux u:object_r:system_file:s0
+cd x88
+rm AtvRemoteService-v57-audiopolicy.apk
+write /tmp/x88_v57_AtvRemoteService_audiopolicy.apk AtvRemoteService-v57-audiopolicy.apk
+sif AtvRemoteService-v57-audiopolicy.apk mode 0100644
+ea_set AtvRemoteService-v57-audiopolicy.apk security.selinux u:object_r:system_file:s0

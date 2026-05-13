@@ -46,3 +46,13 @@ rm x88-remote-support
 write /tmp/x88_v36_x88_remote_support x88-remote-support
 sif x88-remote-support mode 0100755
 ea_set x88-remote-support security.selinux u:object_r:system_file:s0
+cd /system/usr/keychars
+rm Vendor_0508_Product_1980.kcm
+write /tmp/x88_v51_ur02_kcm Vendor_0508_Product_1980.kcm
+sif Vendor_0508_Product_1980.kcm mode 0100644
+ea_set Vendor_0508_Product_1980.kcm security.selinux u:object_r:system_file:s0
+cd /system/usr/keylayout
+rm Vendor_0508_Product_1980.kl
+write /tmp/x88_v52_ur02_kl Vendor_0508_Product_1980.kl
+sif Vendor_0508_Product_1980.kl mode 0100644
+ea_set Vendor_0508_Product_1980.kl security.selinux u:object_r:system_file:s0

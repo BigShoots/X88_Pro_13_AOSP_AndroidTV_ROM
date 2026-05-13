@@ -3,3 +3,8 @@ rm ffa90030_pwm.kl
 write /tmp/x88_v36_ffa90030_pwm_kl ffa90030_pwm.kl
 sif ffa90030_pwm.kl mode 0100644
 ea_set ffa90030_pwm.kl security.selinux u:object_r:vendor_file:s0
+cd /etc
+rm audio_policy_configuration.xml
+write /tmp/x88_v47_audio_policy_configuration audio_policy_configuration.xml
+sif audio_policy_configuration.xml mode 0100644
+ea_set audio_policy_configuration.xml security.selinux u:object_r:vendor_configs_file:s0

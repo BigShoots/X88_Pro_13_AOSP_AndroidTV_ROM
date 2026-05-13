@@ -31,14 +31,181 @@ setprop persist.sys.hdmi.cec.power_control_mode to_tv
 setprop persist.bluetooth.btsnoopenable true
 setprop persist.bluetooth.btsnooplogmode full
 
+patch_gboard_flags() {
+    GBOARD_FLAGS="/data/user/0/com.google.android.inputmethod.latin/shared_prefs/flag_value.xml"
+    if [ -f "$GBOARD_FLAGS" ]; then
+        sed -i 's/name="support_accessory_keyboard" value="true"/name="support_accessory_keyboard" value="false"/' "$GBOARD_FLAGS" >/dev/null 2>&1 || true
+    fi
+}
+
+package_installed() {
+    cmd package list packages "$1" 2>/dev/null | grep -q "package:$1"
+}
+
+set_default_ime() {
+    IME_ID="$1"
+    IME_LABEL="$2"
+    ime enable "$IME_ID" >/dev/null 2>&1 || true
+    if ime set "$IME_ID" >/dev/null 2>&1; then
+        settings put secure default_input_method "$IME_ID"
+        settings put secure show_ime_with_hard_keyboard 1
+        log -t x88-cec-bt-setup "Set ${IME_LABEL} as default input method"
+        return 0
+    fi
+    log -t x88-cec-bt-setup "Unable to set ${IME_LABEL} as default input method"
+    return 1
+}
+
+apply_file_manager_plus_defaults() {
+    if package_installed com.alphainventor.filemanager; then
+        appops set com.alphainventor.filemanager MANAGE_EXTERNAL_STORAGE allow >/dev/null 2>&1 || true
+        appops set com.alphainventor.filemanager GET_USAGE_STATS allow >/dev/null 2>&1 || true
+        appops set com.alphainventor.filemanager REQUEST_INSTALL_PACKAGES allow >/dev/null 2>&1 || true
+        pm grant com.alphainventor.filemanager android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
+        log -t x88-cec-bt-setup "Applied File Manager Plus storage defaults"
+    fi
+}
+
+grant_microphone_access() {
+    MIC_PACKAGE="$1"
+    if package_installed "$MIC_PACKAGE"; then
+        pm grant "$MIC_PACKAGE" android.permission.RECORD_AUDIO >/dev/null 2>&1 || true
+        appops set "$MIC_PACKAGE" RECORD_AUDIO allow >/dev/null 2>&1 || true
+    fi
+}
+
+apply_lean_keyboard_defaults() {
+    if package_installed org.liskovsoft.androidtv.rukeyboard; then
+        grant_microphone_access org.liskovsoft.androidtv.rukeyboard
+        pm grant org.liskovsoft.androidtv.rukeyboard android.permission.READ_EXTERNAL_STORAGE >/dev/null 2>&1 || true
+        pm grant org.liskovsoft.androidtv.rukeyboard android.permission.WRITE_EXTERNAL_STORAGE >/dev/null 2>&1 || true
+        appops set org.liskovsoft.androidtv.rukeyboard READ_EXTERNAL_STORAGE allow >/dev/null 2>&1 || true
+        appops set org.liskovsoft.androidtv.rukeyboard WRITE_EXTERNAL_STORAGE allow >/dev/null 2>&1 || true
+        appops set org.liskovsoft.androidtv.rukeyboard LEGACY_STORAGE allow >/dev/null 2>&1 || true
+        log -t x88-cec-bt-setup "Applied LeanKeyboard voice/storage defaults"
+    fi
+}
+
+apply_atv_remote_service_audio_bridge_patch() {
+    REMOTE_PACKAGE="com.google.android.tv.remote.service"
+    PATCH_APK="/product/etc/x88/AtvRemoteService-v57-audiopolicy.apk"
+
+    if [ ! -f "$PATCH_APK" ] || ! package_installed "$REMOTE_PACKAGE"; then
+        return 0
+    fi
+
+    REMOTE_APK="$(pm path "$REMOTE_PACKAGE" 2>/dev/null | sed -n 's/^package://p' | head -n 1)"
+    if [ -z "$REMOTE_APK" ] || [ ! -f "$REMOTE_APK" ]; then
+        log -t x88-cec-bt-setup "Unable to resolve AtvRemoteService APK path"
+        return 0
+    fi
+
+    mountpoint -q "$REMOTE_APK" >/dev/null 2>&1 && umount "$REMOTE_APK" >/dev/null 2>&1 || true
+    am force-stop "$REMOTE_PACKAGE" >/dev/null 2>&1 || true
+
+    case "$REMOTE_APK" in
+        /data/app/*)
+            REMOTE_DIR="${REMOTE_APK%/*}"
+            PATCH_COPY="${REMOTE_DIR}/base.apk.x88-v57"
+            cp "$PATCH_APK" "$PATCH_COPY" >/dev/null 2>&1 || {
+                log -t x88-cec-bt-setup "Unable to stage AtvRemoteService audio bridge patch"
+                return 0
+            }
+            chown system:system "$PATCH_COPY" >/dev/null 2>&1 || true
+            chmod 0644 "$PATCH_COPY" >/dev/null 2>&1 || true
+            chcon u:object_r:apk_data_file:s0 "$PATCH_COPY" >/dev/null 2>&1 || true
+            mount -o bind "$PATCH_COPY" "$REMOTE_APK" >/dev/null 2>&1 || {
+                log -t x88-cec-bt-setup "Unable to bind AtvRemoteService audio bridge patch"
+                return 0
+            }
+            ;;
+        *)
+            mount -o bind "$PATCH_APK" "$REMOTE_APK" >/dev/null 2>&1 || {
+                log -t x88-cec-bt-setup "Unable to bind AtvRemoteService product audio bridge patch"
+                return 0
+            }
+            ;;
+    esac
+
+    am start-foreground-service --user 0 -a com.android.athome.START_SERVICE -n "$REMOTE_PACKAGE/.RemoteService" >/dev/null 2>&1 \
+        || am startservice --user 0 -a com.android.athome.START_SERVICE -n "$REMOTE_PACKAGE/.RemoteService" >/dev/null 2>&1 \
+        || true
+    log -t x88-cec-bt-setup "Applied AtvRemoteService app microphone audio bridge patch"
+}
+
+apply_voice_search_defaults() {
+    grant_microphone_access com.android.vending
+    apply_lean_keyboard_defaults
+    grant_microphone_access com.google.android.tts
+    grant_microphone_access com.google.android.katniss
+
+    if package_installed com.google.android.katniss; then
+        settings put secure assistant com.google.android.katniss/.search.serviceapi.KatnissVoiceInteractionService
+        settings put secure voice_interaction_service com.google.android.katniss/.search.serviceapi.KatnissVoiceInteractionService
+        settings put secure voice_recognition_service com.google.android.katniss/com.google.android.apps.tvsearch.voice.recognition.KatnissRecognitionService
+        pm enable --user 0 com.google.android.katniss/com.google.android.apps.tvsearch.voice.voiceinput.VoiceInputActivity >/dev/null 2>&1 || true
+        pm enable --user 0 com.google.android.katniss/com.google.android.apps.tvsearch.voice.recognition.KatnissRecognitionService >/dev/null 2>&1 || true
+        log -t x88-cec-bt-setup "Set Katniss as TV speech recognizer"
+    fi
+
+    if package_installed com.google.android.tts; then
+        settings put secure default_voice_input_method com.google.android.tts/com.google.android.apps.speech.tts.googletts.settings.asr.voiceime.VoiceInputMethodService
+        pm enable --user 0 com.google.android.tts/com.google.android.apps.speech.tts.googletts.settings.asr.voiceime.VoiceInputMethodService >/dev/null 2>&1 || true
+        # GoogleTTSActivity competes with Katniss for RECOGNIZE_SPEECH and can send TV apps into a blank resolver/voice UI.
+        pm disable --user 0 com.google.android.tts/com.google.android.apps.speech.tts.googletts.service.GoogleTTSActivity >/dev/null 2>&1 || true
+        log -t x88-cec-bt-setup "Disabled Google TTS speech activity resolver path"
+    fi
+}
+
+ensure_tv_keyboard_default() {
+    attempt=1
+    while [ "$attempt" -le 12 ]; do
+        if package_installed org.liskovsoft.androidtv.rukeyboard; then
+            set_default_ime org.liskovsoft.androidtv.rukeyboard/com.liskovsoft.leankeyboard.ime.LeanbackImeService "LeanKeyboard TV"
+            if [ "$(settings get secure default_input_method)" = "org.liskovsoft.androidtv.rukeyboard/com.liskovsoft.leankeyboard.ime.LeanbackImeService" ]; then
+                return 0
+            fi
+        fi
+        sleep 5
+        attempt=$((attempt + 1))
+    done
+
+    if package_installed com.google.android.inputmethod.latin; then
+        set_default_ime com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME "Gboard"
+        patch_gboard_flags
+    elif package_installed com.android.inputmethod.latin; then
+        set_default_ime com.android.inputmethod.latin/.LatinIME "AOSP LatinIME fallback"
+    else
+        settings put secure show_ime_with_hard_keyboard 1
+        log -t x88-cec-bt-setup "No preferred TV input method package installed"
+    fi
+}
+
+ensure_tv_keyboard_default
+apply_lean_keyboard_defaults
+apply_file_manager_plus_defaults
+apply_voice_search_defaults
+apply_atv_remote_service_audio_bridge_patch
+ensure_tv_keyboard_default
+
 if cmd package list packages com.swe.myapplication 2>/dev/null | grep -q com.swe.myapplication; then
     pm grant com.swe.myapplication android.permission.ACCESS_COARSE_LOCATION >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.ACCESS_FINE_LOCATION >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.BLUETOOTH_SCAN >/dev/null 2>&1 || true
     pm grant com.swe.myapplication android.permission.BLUETOOTH_CONNECT >/dev/null 2>&1 || true
     appops set com.swe.myapplication SYSTEM_ALERT_WINDOW allow >/dev/null 2>&1 || true
-    am start-foreground-service --user 0 -n com.swe.myapplication/.DetectService --ei type 1 >/dev/null 2>&1 || true
-    log -t x88-cec-bt-setup "Started stock Bluetooth remote pairing helper"
+    appops set com.swe.myapplication RUN_ANY_IN_BACKGROUND allow >/dev/null 2>&1 || true
+    appops set com.swe.myapplication START_FOREGROUND allow >/dev/null 2>&1 || true
+    cmd deviceidle whitelist +com.swe.myapplication >/dev/null 2>&1 || true
+    attempt=1
+    while [ "$attempt" -le 10 ]; do
+        patch_gboard_flags
+        ensure_tv_keyboard_default
+        am startservice --user 0 -n com.swe.myapplication/.DetectService --ei type 1 >/dev/null 2>&1 || true
+        log -t x88-cec-bt-setup "Started stock Bluetooth remote pairing helper attempt ${attempt}"
+        attempt=$((attempt + 1))
+        [ "$attempt" -le 10 ] && sleep 30
+    done
 else
     log -t x88-cec-bt-setup "Bluetooth remote pairing helper package not installed"
 fi

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<audioPolicyConfiguration version="7.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <globalConfiguration speaker_drc_enabled="true"/>
+
+    <modules>
+        <module name="primary" halVersion="2.0">
+            <attachedDevices>
+                <item>Speaker</item>
+            </attachedDevices>
+            <defaultOutputDevice>Speaker</defaultOutputDevice>
+
+            <mixPorts>
+                <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </mixPort>
+
+                <mixPort name="hdmi_bitstream" role="source" flags="AUDIO_OUTPUT_FLAG_DIRECT">
+                    <profile name="ac3" format="AUDIO_FORMAT_AC3"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1"/>
+                    <profile name="eac3" format="AUDIO_FORMAT_E_AC3"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1 AUDIO_CHANNEL_OUT_7POINT1"/>
+                    <profile name="eac3-joc" format="AUDIO_FORMAT_E_AC3_JOC"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1 AUDIO_CHANNEL_OUT_7POINT1"/>
+                    <profile name="dts" format="AUDIO_FORMAT_DTS"
+                             samplingRates="32000 44100 48000 88200 96000 192000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1"/>
+                    <profile name="dtshd" format="AUDIO_FORMAT_DTS_HD"
+                             samplingRates="44100 48000 88200 96000 192000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1 AUDIO_CHANNEL_OUT_7POINT1"/>
+                    <profile name="iec" format="AUDIO_FORMAT_IEC61937"
+                             samplingRates="32000 44100 48000 88200 96000 176400 192000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1 AUDIO_CHANNEL_OUT_7POINT1"/>
+                </mixPort>
+
+                <mixPort name="spdif_passthrough" role="source" flags="AUDIO_OUTPUT_FLAG_DIRECT">
+                    <profile name="ac3" format="AUDIO_FORMAT_AC3"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1"/>
+                    <profile name="dts" format="AUDIO_FORMAT_DTS"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO AUDIO_CHANNEL_OUT_5POINT1"/>
+                    <profile name="iec" format="AUDIO_FORMAT_IEC61937"
+                             samplingRates="32000 44100 48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </mixPort>
+            </mixPorts>
+
+            <devicePorts>
+                <devicePort tagName="Speaker" type="AUDIO_DEVICE_OUT_SPEAKER" role="sink"/>
+                <devicePort tagName="HDMI Out" type="AUDIO_DEVICE_OUT_AUX_DIGITAL" role="sink"/>
+                <devicePort tagName="SPDIF Out" type="AUDIO_DEVICE_OUT_SPDIF" role="sink"/>
+            </devicePorts>
+
+            <routes>
+                <route type="mix" sink="Speaker" sources="primary output"/>
+                <route type="mix" sink="HDMI Out" sources="primary output,hdmi_bitstream"/>
+                <route type="mix" sink="SPDIF Out" sources="primary output,spdif_passthrough"/>
+            </routes>
+        </module>
+
+        <xi:include href="usb_audio_policy_configuration.xml"/>
+
+        <module name="blehid" halVersion="2.0">
+            <attachedDevices>
+                <item>hbg_audio</item>
+            </attachedDevices>
+            <mixPorts>
+                <mixPort name="blehid input" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="16000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </mixPort>
+            </mixPorts>
+            <devicePorts>
+                <devicePort tagName="hbg_audio" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="16000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </devicePort>
+            </devicePorts>
+            <routes>
+                <route type="mix" sink="blehid input" sources="hbg_audio"/>
+            </routes>
+        </module>
+
+        <xi:include href="r_submix_audio_policy_configuration.xml"/>
+    </modules>
+
+    <xi:include href="audio_policy_volumes_drc.xml"/>
+    <xi:include href="default_volume_tables.xml"/>
+</audioPolicyConfiguration>
