@@ -2,19 +2,19 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v58. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience. This release keeps the Android TV/Google TV app stack while fixing UR02 remote microphone routing for app voice search and the LeanKeyboard voice button.
+The current public test build is v72. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience. This release keeps the Android TV/Google TV app stack, preserves the UR02 remote microphone fixes, and corrects the active Rockchip Codec2 4K video buffer path so VP9 2160p60 can use MPP FBC output without crashing the decoder service.
 
 ## Current Release
 
-- Release tag: `v0.58`
+- Release tag: `v0.72`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
-- Size: `1,958,865,482` bytes
-- SHA256: `85594F1E8191CFD264C6C01A2E08FB9B8C4FAA46D2E47F729E9E50AC6250C69D`
+- Size: `1,958,869,578` bytes
+- SHA256: `C08F42A037D1ADD7CD2375F2A919FB432C78D7E3373C6DA2BAB399F1D76F007E`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
-- ROM marker: `version=v58-blehid-mic-keyboard`
-- Baseline: v58 tested build
+- ROM marker: `version=v72-corrected-fbc-decoder`
+- Baseline: v72 tested build
 
 ## What Is Included
 
@@ -34,6 +34,7 @@ The current public test build is v58. It is based on the AOSP/Android TV image c
 - File Manager Plus replaces Amaze File Manager.
 - SmartTube `31.63`.
 - Downloader `2.0.3-ForGoogleAndroidDevices`.
+- Corrected Rockchip Codec2/MPP FBC path for 4K VP9 playback.
 
 ## Flashing
 

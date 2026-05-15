@@ -5,6 +5,7 @@ ro.hdmi.cec_audio_device_forward_volume_keys_system_audio_mode_off=true
 persist.sys.hdmi.control.enabled=1
 persist.sys.hdmi.cec.switch.enabled=1
 persist.sys.hdmi.cec.power_control_mode=to_tv
+bluetooth.profile.hid.host.enabled=true
 persist.bluetooth.btsnoopenable=true
 persist.bluetooth.btsnooplogmode=full
 persist.bluetooth.rtkcoex=true

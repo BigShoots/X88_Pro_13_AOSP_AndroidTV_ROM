@@ -436,13 +436,18 @@ function Write-RawImageToLba {
         [RockusbSession] $Session,
         [string] $Path,
         [UInt32] $TargetLba,
-        [int] $MaxSectors
+        [int] $MaxSectors,
+        [UInt64] $PartitionSectors = 0
     )
 
     $file = [IO.File]::OpenRead((Resolve-Path $Path))
     try {
+        $imageSectors = [UInt64][Math]::Ceiling($file.Length / 512.0)
+        if (($PartitionSectors -gt 0) -and ($imageSectors -gt $PartitionSectors)) {
+            throw "Raw image expands to $imageSectors sectors, larger than partition $PartitionSectors sectors."
+        }
         if (($file.Length % 512) -ne 0) {
-            throw "Raw image length is not sector-aligned: $($file.Length)"
+            Write-Host ("Raw image length {0:N0} bytes is not sector-aligned; padding final sector." -f $file.Length)
         }
 
         $buffer = New-Object byte[] ($MaxSectors * 512)
@@ -450,14 +455,19 @@ function Write-RawImageToLba {
         while ($true) {
             $read = $file.Read($buffer, 0, $buffer.Length)
             if ($read -le 0) { break }
-            if (($read % 512) -ne 0) { throw 'Short raw image read was not sector-aligned.' }
 
-            $sectors = [UInt16]($read / 512)
+            $writeBytes = $read
+            if (($read % 512) -ne 0) {
+                $writeBytes = [int]([Math]::Ceiling($read / 512.0) * 512)
+                [Array]::Clear($buffer, $read, $writeBytes - $read)
+            }
+
+            $sectors = [UInt16]($writeBytes / 512)
             if ($read -eq $buffer.Length) {
                 $chunk = $buffer
             } else {
-                $chunk = New-Object byte[] $read
-                [Array]::Copy($buffer, 0, $chunk, 0, $read)
+                $chunk = New-Object byte[] $writeBytes
+                [Array]::Copy($buffer, 0, $chunk, 0, $writeBytes)
             }
 
             $Session.WriteLba(($TargetLba + [UInt32]$writtenSectors), $sectors, $chunk)
@@ -741,7 +751,7 @@ try {
             if ($Sparse) {
                 Write-SparseImageToLba $session $Image ([UInt32]$part.FirstLba) ([UInt64]$part.SectorCount) $ChunkSectors
             } else {
-                Write-RawImageToLba $session $Image ([UInt32]$part.FirstLba) $ChunkSectors
+                Write-RawImageToLba $session $Image ([UInt32]$part.FirstLba) $ChunkSectors ([UInt64]$part.SectorCount)
             }
         }
         'reset' {

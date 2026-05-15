@@ -27,9 +27,129 @@ setprop persist.sys.hdmi.control.enabled 1
 setprop persist.sys.hdmi.cec.switch.enabled 1
 setprop persist.sys.hdmi.cec.power_control_mode to_tv
 
+set_cec_setting() {
+    cmd hdmi_control cec_setting set "$1" "$2" >/dev/null 2>&1 || true
+}
+
+apply_hdmi_cec_runtime_defaults() {
+    # Android 12+ keeps the authoritative CEC config in HdmiControlService, not
+    # just in SettingsProvider globals.
+    set_cec_setting hdmi_cec_enabled 1
+    set_cec_setting hdmi_cec_version 6
+    set_cec_setting routing_control 1
+    set_cec_setting power_control_mode to_tv
+    set_cec_setting system_audio_control 1
+    set_cec_setting volume_control_enabled 1
+    set_cec_setting tv_wake_on_one_touch_play 1
+    set_cec_setting tv_send_standby_on_sleep 1
+    cmd hdmi_control onetouchplay >/dev/null 2>&1 || true
+    log -t x88-cec-bt-setup "Applied HDMI-CEC runtime defaults"
+}
+
+set_stream_volume_max() {
+    STREAM="$1"
+    MAX="$2"
+    cmd media_session volume --stream "$STREAM" --set "$MAX" >/dev/null 2>&1 || true
+}
+
+max_android_hdmi_volume() {
+    set_stream_volume_max 0 5
+    set_stream_volume_max 1 7
+    set_stream_volume_max 2 7
+    set_stream_volume_max 3 15
+    set_stream_volume_max 4 7
+    set_stream_volume_max 5 7
+    set_stream_volume_max 6 15
+    set_stream_volume_max 8 15
+    set_stream_volume_max 10 15
+    set_stream_volume_max 11 15
+
+    settings put system volume_voice 5
+    settings put system volume_system 7
+    settings put system volume_ring 7
+    settings put system volume_music 15
+    settings put system volume_music_hdmi 15
+    settings put system volume_alarm 7
+    settings put system volume_notification 7
+    settings put system volume_bluetooth_sco 15
+    log -t x88-cec-bt-setup "Maxed Android HDMI volume while CEC handles TV volume when available"
+}
+
 # Keep Bluetooth logging on for remote-side troubleshooting of pairing failures.
 setprop persist.bluetooth.btsnoopenable true
 setprop persist.bluetooth.btsnooplogmode full
+
+ensure_hdmi_framebuffer_mode() {
+    MODES_FILE="/sys/class/drm/card0-HDMI-A-1/modes"
+    [ -r "$MODES_FILE" ] || return 0
+
+    if grep -q '^3840x2160$' "$MODES_FILE"; then
+        DESIRED_RESOLUTION="3840x2160"
+        DESIRED_MAIN="3840x2160@60"
+    elif grep -q '^1920x1080$' "$MODES_FILE"; then
+        DESIRED_RESOLUTION="1920x1080"
+        DESIRED_MAIN="1920x1080@60"
+    else
+        return 0
+    fi
+
+    CURRENT_RESOLUTION_MODE="$(getprop vendor.hwc.resolution_mode)"
+    case "$CURRENT_RESOLUTION_MODE" in
+        "${DESIRED_RESOLUTION}"*) ;;
+        *) apply_rockchip_hdmi_mode "$DESIRED_RESOLUTION" ;;
+    esac
+
+    CURRENT_MAIN="$(getprop persist.vendor.framebuffer.main)"
+    CURRENT_AUX="$(getprop persist.vendor.framebuffer.aux)"
+    DESIRED_AUX="1920x1080@60"
+
+    if [ "$CURRENT_MAIN" = "$DESIRED_MAIN" ] && [ "$CURRENT_AUX" = "$DESIRED_AUX" ]; then
+        return 0
+    fi
+
+    setprop persist.vendor.framebuffer.main "$DESIRED_MAIN"
+    setprop persist.vendor.framebuffer.aux "$DESIRED_AUX"
+    log -t x88-cec-bt-setup "Set HDMI framebuffer mode to ${DESIRED_MAIN}"
+    log -t x88-cec-bt-setup "Skipped late Rockchip HWC restart; framebuffer mode will settle without killing active surfaces"
+}
+
+pick_rockchip_hdmi_mode() {
+    TARGET_RESOLUTION="$1"
+    TARGET_RATE_PATTERN="$2"
+
+    x88-display 2>/dev/null \
+        | tr ',' '\n' \
+        | sed -n "s/.*set=\"\(${TARGET_RESOLUTION}@${TARGET_RATE_PATTERN}-[^\"]*\)\".*/\1/p" \
+        | head -n 1
+}
+
+apply_rockchip_hdmi_mode() {
+    TARGET_RESOLUTION="$1"
+    [ -x /system/bin/x88-display ] || return 0
+
+    if [ "$TARGET_RESOLUTION" = "3840x2160" ]; then
+        TARGET_MODE="$(pick_rockchip_hdmi_mode "$TARGET_RESOLUTION" '60\.[0-9][0-9]')"
+        [ -n "$TARGET_MODE" ] || TARGET_MODE="$(pick_rockchip_hdmi_mode "$TARGET_RESOLUTION" '59\.94')"
+        [ -n "$TARGET_MODE" ] || TARGET_MODE="$(pick_rockchip_hdmi_mode "$TARGET_RESOLUTION" '[0-9][0-9]\.[0-9][0-9]')"
+    else
+        TARGET_MODE="Auto"
+    fi
+
+    if [ -z "$TARGET_MODE" ]; then
+        return 0
+    fi
+
+    CURRENT_MODE="$(x88-display 2>/dev/null | sed -n 's/^  curMode=0://p' | head -n 1)"
+    if [ "$CURRENT_MODE" = "$TARGET_MODE" ]; then
+        return 0
+    fi
+
+    if x88-display set-mode 0 "$TARGET_MODE" >/dev/null 2>&1; then
+        log -t x88-cec-bt-setup "Set Rockchip HDMI mode to ${TARGET_MODE}"
+    else
+        log -t x88-cec-bt-setup "Unable to set Rockchip HDMI mode to ${TARGET_MODE}"
+    fi
+}
 
 patch_gboard_flags() {
     GBOARD_FLAGS="/data/user/0/com.google.android.inputmethod.latin/shared_prefs/flag_value.xml"
@@ -181,11 +301,16 @@ ensure_tv_keyboard_default() {
     fi
 }
 
+apply_hdmi_cec_runtime_defaults
+max_android_hdmi_volume
+ensure_hdmi_framebuffer_mode
 ensure_tv_keyboard_default
 apply_lean_keyboard_defaults
 apply_file_manager_plus_defaults
 apply_voice_search_defaults
 apply_atv_remote_service_audio_bridge_patch
+apply_hdmi_cec_runtime_defaults
+max_android_hdmi_volume
 ensure_tv_keyboard_default
 
 if cmd package list packages com.swe.myapplication 2>/dev/null | grep -q com.swe.myapplication; then

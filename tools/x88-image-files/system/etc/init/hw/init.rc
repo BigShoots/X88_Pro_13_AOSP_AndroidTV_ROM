@@ -795,6 +795,11 @@ on post-fs-data
     mkdir /data/property 0700 root root encryption=Require
     load_persist_props
 
+    # Keep stale persisted gralloc defaults from forcing the 4K video path back
+    # to the old no-AFBC policy before HWC and Codec2 settle.
+    setprop persist.vendor.gralloc.disable_afbc 0
+    setprop persist.vendor.gralloc.no_afbc_for_fb_target_layer 0
+
     start logd
     start logd-reinit
 
