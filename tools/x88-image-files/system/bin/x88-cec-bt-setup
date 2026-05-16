@@ -85,10 +85,8 @@ ensure_hdmi_framebuffer_mode() {
 
     if grep -q '^3840x2160$' "$MODES_FILE"; then
         DESIRED_RESOLUTION="3840x2160"
-        DESIRED_MAIN="3840x2160@60"
     elif grep -q '^1920x1080$' "$MODES_FILE"; then
         DESIRED_RESOLUTION="1920x1080"
-        DESIRED_MAIN="1920x1080@60"
     else
         return 0
     fi
@@ -101,6 +99,7 @@ ensure_hdmi_framebuffer_mode() {
 
     CURRENT_MAIN="$(getprop persist.vendor.framebuffer.main)"
     CURRENT_AUX="$(getprop persist.vendor.framebuffer.aux)"
+    DESIRED_MAIN="1920x1080@60"
     DESIRED_AUX="1920x1080@60"
 
     if [ "$CURRENT_MAIN" = "$DESIRED_MAIN" ] && [ "$CURRENT_AUX" = "$DESIRED_AUX" ]; then
@@ -109,7 +108,7 @@ ensure_hdmi_framebuffer_mode() {
 
     setprop persist.vendor.framebuffer.main "$DESIRED_MAIN"
     setprop persist.vendor.framebuffer.aux "$DESIRED_AUX"
-    log -t x88-cec-bt-setup "Set HDMI framebuffer mode to ${DESIRED_MAIN}"
+    log -t x88-cec-bt-setup "Set HDMI framebuffer mode to ${DESIRED_MAIN} with ${DESIRED_RESOLUTION} HDMI output"
     log -t x88-cec-bt-setup "Skipped late Rockchip HWC restart; framebuffer mode will settle without killing active surfaces"
 }
 

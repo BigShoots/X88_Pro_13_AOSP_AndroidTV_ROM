@@ -1,6 +1,7 @@
 #!/system/bin/sh
 
 POLICY=/sys/devices/system/cpu/cpufreq/policy0
+GPU=/sys/class/devfreq/ff700000.gpu
 MIN=$(cat "$POLICY/cpuinfo_min_freq" 2>/dev/null)
 MAX=$(cat "$POLICY/cpuinfo_max_freq" 2>/dev/null)
 
@@ -15,4 +16,15 @@ else
     echo "$MIN" > "$POLICY/scaling_min_freq" 2>/dev/null
     echo "$MAX" > "$POLICY/scaling_max_freq" 2>/dev/null
     echo interactive > "$POLICY/scaling_governor" 2>/dev/null
+fi
+
+GPU_LOCK="$(getprop persist.x88.gpu_max_lock)"
+[ -n "$GPU_LOCK" ] || GPU_LOCK=1
+
+if [ -d "$GPU" ]; then
+    if [ "$GPU_LOCK" = "0" ]; then
+        echo simple_ondemand > "$GPU/governor" 2>/dev/null
+    else
+        echo performance > "$GPU/governor" 2>/dev/null
+    fi
 fi

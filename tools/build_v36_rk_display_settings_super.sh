@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT="/mnt/c/Users/Student/Documents/X88 FIrmware"
 PARTS="${ROOT}/firmware_unpacked/X88_Pro_13_AOSP.img.dump/super_parts"
-WORK="${ROOT}/work_tvsettings_rk/v72_corrected_fbc_decoder"
-TAG="v72-corrected-fbc-decoder"
+WORK="${ROOT}/work_tvsettings_rk/v73_4k_output_1080_ui"
+TAG="v73-4k-output-1080-ui"
 LPTOOLS="${ROOT}/tools/aosp15_partition_tools-main/linux_glibc_x86_64"
 PATCH_DIR="${ROOT}/tools/patches"
 
@@ -59,8 +59,8 @@ grep -v -E '^(persist\.vendor\.framebuffer\.(main|aux)=|persist\.vendor\.gralloc
   echo "persist.vendor.gralloc.disable_afbc=0"
   echo "vendor.gralloc.no_afbc_for_fb_target_layer=0"
   echo "persist.vendor.gralloc.no_afbc_for_fb_target_layer=0"
-  echo "vendor.hwc.video_buf_cache_max_size=536870912"
-  echo "vendor.hwc.enable_composition_drop_mode=1"
+  echo "vendor.hwc.video_buf_cache_max_size=67108864"
+  echo "vendor.hwc.enable_composition_drop_mode=0"
   echo "vendor.hwc.smart_scale_enable=1"
   echo "vendor.hwc.enable_rga_policy=1"
   echo "vendor.hwc.vop_max_overlay_4k_plane=1"

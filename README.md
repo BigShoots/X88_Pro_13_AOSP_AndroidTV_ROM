@@ -2,19 +2,19 @@
 
 Custom Android TV firmware work for the X88 Pro 13 RK3528 Android TV box.
 
-The current public test build is v72. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience. This release keeps the Android TV/Google TV app stack, preserves the UR02 remote microphone fixes, and corrects the active Rockchip Codec2 4K video buffer path so VP9 2160p60 can use MPP FBC output without crashing the decoder service.
+The current public test build is v73. It is based on the AOSP/Android TV image chain, with stock Rockchip/X88 hardware pieces retained where needed and stock bundled third-party launcher/apps removed from the user-facing experience. This release keeps the Android TV/Google TV app stack, preserves the UR02 remote microphone fixes, keeps 4K HDMI output available, and moves the Android/UI framebuffer back to 1080p so the launcher and app UI are not forced through a 4K framebuffer.
 
 ## Current Release
 
-- Release tag: `v0.72`
+- Release tag: `v0.73`
 - Flashable image: `X88_Pro_13_AOSP.img`
 - Image type: Rockchip RKFW factory firmware package
 - Size: `1,958,869,578` bytes
-- SHA256: `C08F42A037D1ADD7CD2375F2A919FB432C78D7E3373C6DA2BAB399F1D76F007E`
+- SHA256: `7D9EC919F269752B14B18DB8225F2D01231599F420C165ED22966420F7742562`
 - Device: X88 Pro 13 RK3528 Android TV box
 - Included partitions/payloads: loader, parameter, uboot, misc, dtbo, vbmeta, boot, recovery, baseparameter, super
-- ROM marker: `version=v72-corrected-fbc-decoder`
-- Baseline: v72 tested build
+- ROM marker: `version=v73-4k-output-1080-ui`
+- Baseline: v73 4K-output/1080-UI test build
 
 ## What Is Included
 
@@ -35,6 +35,8 @@ The current public test build is v72. It is based on the AOSP/Android TV image c
 - SmartTube `31.63`.
 - Downloader `2.0.3-ForGoogleAndroidDevices`.
 - Corrected Rockchip Codec2/MPP FBC path for 4K VP9 playback.
+- 4K HDMI output with 1080p Android/UI framebuffer for smoother UI on 4K TVs.
+- Mali GPU devfreq performance default for launcher/app responsiveness.
 
 ## Flashing
 
